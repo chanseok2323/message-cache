@@ -32,9 +32,11 @@ public class CodeService {
     }
 
     //TODO 만약 messagekey 값이 update 치면, 캐시에 변경 전 messageKey 값이 남겨질 수 있기 때문에 @CacheEvic 으로 삭제가 필요할거 같음
+    @CacheEvict(key = "#codeDto.beforeMessageKey", value = "code")
     @CachePut(key = "#codeDto.messageKey", value = "code")
     @Transactional
     public Code update(CodeDto codeDto) {
+        log.info("messageKey = {}", codeDto.getMessageKey());
         Code code = codeRepository.findByNo(codeDto.getNo());
         Code modify = code.modify(codeDto.getMessageKey(), codeDto.getMessage());
         return codeRepository.save(modify);
