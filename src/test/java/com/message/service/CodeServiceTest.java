@@ -62,6 +62,7 @@ class CodeServiceTest {
         assertThat(beforeCode.getMessage()).isEqualTo("메시지테스트1 입니다.");
 
         Code modify = codeService.update(new CodeDto(beforeCode.getNo(), "UTT400","UTT420", "메시지테스트10 입니다."));
+
         Code afterCode1 = codeService.findByKey("UTT400");
         log.info("after1 = {}", afterCode1);
         Code afterCode2 = codeService.findByKey("UTT420");
