@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Getter
 @ToString
 @Table(name = "code_table")
-public class Code {
+public class Code implements Serializable {
 
     @Id
     @Column(name = "code_no")

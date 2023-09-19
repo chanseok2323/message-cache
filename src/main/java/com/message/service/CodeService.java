@@ -5,25 +5,23 @@ import com.message.dto.CodeDto;
 import com.message.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "code")
 public class CodeService {
     private final CodeRepository codeRepository;
 
-    @Transactional(readOnly = true)
     @Cacheable(key = "#key", value = "code", unless = "#result == null")
     public Code findByKey(String key) {
         log.info("call CodeService.findByKey");
-        return codeRepository.findByMessageKey(key);
+        return codeRepository.findDistinctByMessageKey(key);
     }
 
     @Transactional
@@ -40,5 +38,11 @@ public class CodeService {
         Code code = codeRepository.findByNo(codeDto.getNo());
         Code modify = code.modify(codeDto.getMessageKey(), codeDto.getMessage());
         return codeRepository.save(modify);
+    }
+
+    @CacheEvict(value = "code", allEntries = true)
+    @Scheduled(fixedDelay = 3)
+    public void evictCache() {
+        log.info("=== evict cache ===");
     }
 }

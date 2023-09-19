@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeRepository extends JpaRepository<Code, Long> {
     Code findByNo(Long no);
-    Code findByMessageKey(String key);
+    Code findDistinctByMessageKey(String key);
 
 }
