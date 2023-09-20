@@ -9,7 +9,7 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class CacheConfig {
     private CacheManager createCacheManager() {
         net.sf.ehcache.config.Configuration configuration = new net.sf.ehcache.config.Configuration();
@@ -17,7 +17,7 @@ public class CacheConfig {
         return net.sf.ehcache.CacheManager.create(configuration);
     }
 
-    @Bean
+    //@Bean
     public EhCacheCacheManager ehCacheCacheManager() {
 
         CacheManager manager = this.createCacheManager();

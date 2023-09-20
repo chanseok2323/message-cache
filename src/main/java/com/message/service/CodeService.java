@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,11 @@ public class CodeService {
     public Code findByKey(String key) {
         log.info("call CodeService.findByKey");
         return codeRepository.findDistinctByMessageKey(key);
+    }
+
+    public List<Code> findByLanguage(String language) {
+        log.info("call CodeService.findByLanguage");
+        return codeRepository.findByLanguage(language);
     }
 
     @Transactional
