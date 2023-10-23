@@ -5,6 +5,7 @@ import com.message.dto.CodeDto;
 import com.message.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,23 +13,32 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodeService {
     private final CodeRepository codeRepository;
+    private final CacheManager cacheManager;
 
-    @Cacheable(key = "#key", value = "code", unless = "#result == null")
+    @Cacheable(key = "#key", value = "messages", unless = "#result == null")
     public Code findByKey(String key) {
         log.info("call CodeService.findByKey");
         return codeRepository.findDistinctByMessageKey(key);
     }
 
-    public List<Code> findByLanguage(String language) {
+    public Map<String, Object> findByLanguage(String language) {
         log.info("call CodeService.findByLanguage");
-        return codeRepository.findByLanguage(language);
+        return codeRepository.findByLanguage(language).stream().collect(Collectors.toMap(Code::getMessageKey, Code::getMessage));
+    }
+
+    @CacheEvict(key = "#language", value = "message")
+    @CachePut(key = "#language", value = "message")
+    public Map<String, Object> clear(String language) {
+        log.info("call CodeService.findByLanguage = {}", language);
+        return codeRepository.findByLanguage(language).stream().collect(Collectors.toMap(Code::getMessageKey, Code::getMessage));
     }
 
     @Transactional

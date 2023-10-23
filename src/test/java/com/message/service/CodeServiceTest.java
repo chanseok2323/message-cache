@@ -28,19 +28,6 @@ class CodeServiceTest {
     @Autowired
     CacheManager cacheManager;
 
-    @BeforeEach
-    public void init() {
-        codeService.insert(new Code("ko", "UTT400", "메시지테스트1 입니다."));
-        codeService.insert(new Code("ko", "UTT401", "메시지테스트2 입니다."));
-        codeService.insert(new Code("ko", "UTT402", "메시지테스트3 입니다."));
-        codeService.insert(new Code("ko", "UTT403", "메시지테스트4 입니다."));
-        codeService.insert(new Code("ko", "UTT404", "메시지테스트5 입니다."));
-        codeService.insert(new Code("ko", "UTT405", "메시지테스트6 입니다."));
-        codeService.insert(new Code("ko", "UTT406", "메시지테스트7 입니다."));
-        codeService.insert(new Code("ko", "UTT407", "메시지테스트8 입니다."));
-        codeService.insert(new Code("ko", "UTT408", "메시지테스트9 입니다."));
-    }
-
     @Test
     void cache() {
         Code code1 = codeService.findByKey("UTT400");

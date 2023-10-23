@@ -1,6 +1,7 @@
 package com.message.config;
 
 import com.message.domain.Code;
+import com.message.dto.CodeDto;
 import com.message.service.CodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -31,8 +33,7 @@ class MessageCacheManagerTest {
 
     @Test
     void cacheManagerTest() {
-        Map<String, String> map = codeService.findByLanguage("ko").stream()
-                                    .collect(Collectors.toMap(Code::getMessageKey, Code::getMessage));
+        Map<String, Object> map = codeService.findByLanguage("ko");
 
         messageCacheManager.reload("ko", map);
 
@@ -52,5 +53,27 @@ class MessageCacheManagerTest {
         Set<String> afterKey = afterCacheCodes.keySet();
         afterKey.forEach(v -> log.info("after modify key = {}, value = {}", v, afterCacheCodes.get(v)));
 
+    }
+
+    @Test
+    void cache() {
+        Map<String, Object> value = codeService.clear("ko");
+        Cache cache = cacheManager.getCache("message");
+        Cache.ValueWrapper wrapper = cache.get("ko");
+        Map<String, Object> map = (Map<String, Object>) wrapper.get();
+
+        map.keySet().forEach(v -> log.info("cache = {}", map.get(v)));
+    }
+
+    @Test
+    void update() {
+        Code beforeCode = codeService.findByKey("UTT400");
+
+        Code modify = codeService.update(new CodeDto(beforeCode.getNo(), "UTT400","UTT420", "메시지테스트10 입니다."));
+
+        Cache.ValueWrapper wrapper = cacheManager.getCache("code").get("UTT400");
+        Object o = wrapper.get();
+
+        log.info("object = {}", o);
     }
 }
