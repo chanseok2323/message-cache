@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd
  ">
 
-    <!-- 디스크 사용 시 -->
+        <!-- 디스크 사용 시 -->
 <!--    <persistence directory="cache/data"/>-->
 
     <cache alias="messages">
